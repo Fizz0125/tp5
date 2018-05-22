@@ -1,0 +1,110 @@
+
+<title>确认订单信息</title>
+
+<script src="__WEBPUBLIC__js/pay.js"></script>
+
+
+<link href="__WEBPUBLIC__css/pay.css" type="text/css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div class="bigbg">
+
+<!--这里是内容区域-->
+<div class="content">
+    <div class="box">
+        <h2>确认订单页</h2>
+        <div class="title">
+            <p>店铺宝贝</p>
+            <p>单价（元）</p>
+            <p>数量</p>
+            <p>优惠方式（元）</p>
+            <p>小计（元）</p>
+        </div>
+        <div class="address">
+            <span class="left">收货地址</span>
+            <ul class="addresslist">
+                <li class="cur add">
+                    <p class="first"><span>寄送至</span></p>
+                    <input name="address" type="radio" value="" checked="checked"/>
+                    <p class="addr">{$address.address}</p>
+                    <p class="phone">（{$address.realname}）收 {$address.phone}</p>
+                    <p class="right">默认地址</p>
+                    <a href="/web/user/index">修改地址</a>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="tit">
+            <span>店铺：PRESSO</span>
+            <p>和我联系</p>
+            <a href="/web/conduct/index"><img src="__WEBPUBLIC__images/us.png"></a>
+            <div class="clear"></div>
+        </div>
+        <ul class="list">
+        	{volist name="pro" id="plist"}
+            <li>
+                <a class="img" href="/web/product/details/cid/{$plist.pro_category_id}/id/{$plist.id}"><img src="{$plist.pic}" width="148px" height="148px"></a>
+                <div class="left">
+                  <a class="font" href="/web/product/details/cid/{$plist.pro_category_id}/id/{$plist.id}">{$plist.brief}</a>
+                </div>
+                <span class="price">￥{$plist.shop_price}</span>
+                <input type="text" id="num{$plist.id}" name="num" value="{$plist.qty}" class="{$total.type}" onchange="edit('{$plist.id}')">
+                <select name="">
+                  <option value="400">特价</option>
+                </select>
+                <div class="clear"></div>
+            </li>
+            {/volist}
+        </ul>
+        <p style="margin:10px 0 0 50px;font-size: 22px;float: left;">小计:<span class="total" style="color: red;">￥{$total.price*$total.qty}</span></p>
+        <div class="bottom">
+            <a href="javascript:;" class="submitBtn" onclick="addorder()">提交订单</a>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script>
+	function addorder(){
+		var type = $('input[name="num"]').eq(0).attr('class');
+		$.ajax({
+			type:"post",
+			url:"/web/order/addorder",
+			dataType : 'json',
+			data : {type:type},
+			success : function(data)
+			{
+				if(data.error==true){
+					layer.msg(data.msg);
+					return false;
+				}
+				window.location.href="/web/order/index/order/"+data.order_sn;
+			}
+		})
+	}
+	function edit(id)
+	{
+		var type = $('#num'+id+'').attr('class');
+		var qty = $('#num'+id+'').val();
+		$.ajax({
+			type:"post",
+			url:"/web/pay/index",
+			dataType : 'json',
+			data : {id:id,qty:qty,type:type},
+			success : function(data)
+			{
+				if(data.error == true){
+					alert(data.msg);
+					return false;
+				}
+				$('.total').html('￥'+data.total.price*data.total.qty);
+			}
+		})
+	}
+</script>

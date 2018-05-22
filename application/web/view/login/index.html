@@ -1,0 +1,88 @@
+
+<title>登陆</title>
+
+<link href="__WEBPUBLIC__css/login.css" type="text/css" rel="stylesheet">
+<script src="__WEBPUBLIC__js/validate.js"></script>
+
+</head>
+
+<body>
+
+
+
+<!--这里是内容区域-->
+<div class="content">
+    <div class="box">
+    <div class="bg"></div>
+        <div class="right">
+            <h3>帐号登录</h3>
+            <form action="/web/login/login" method="post">
+	            <div class="inputbg">
+	            <input type="text" name="username" placeholder=" 用户名/邮箱">
+	            </div>
+	            <div class="inputbg">
+	            <input type="password" name="password" placeholder=" 密码">
+	            </div>
+	            <ul class="a">
+	                <li><a href="register.html">我要注册</a></li>
+	                <li><a href="javascript:;">忘记密码?</a></li>
+	            </ul>
+	            <input name="login" type="submit" value="登录">
+            </form>
+            <a class="font">快捷登录:</a>
+            <a class="qq" href="javascript:;"></a>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<script>
+	$('form').validate({
+		rules:{
+			username:{
+				required:true,
+				remote: {
+				    url: "/web/login/index/act/username",     //后台处理程序
+				    type: "post",               //数据发送方式
+				    dataType: "json",           //接受数据格式   
+				    data: {                     //要传递的数据
+				        username: function() {
+				            return $("input[name='username']").val();
+				        }
+				    }
+				}
+			},
+			password:{
+				required:true,
+				remote: {
+				    url: "/web/login/index/act/password",     //后台处理程序
+				    type: "post",               //数据发送方式
+				    dataType: "json",           //接受数据格式   
+				    data: {                     //要传递的数据
+				        username: function() {
+				            return $("input[name='username']").val();
+				        },
+				        password:function(){
+				            return $("input[name='password']").val();
+				        }
+				    }
+				}
+			}
+		},
+		messages:{
+			username:{
+				required:'用户不允许为空',
+				remote:'用户不存在'
+			},
+			password:{
+				required:'密码不允许为空',
+				remote:'密码错误'
+			}
+		},
+		success:function(e){
+			$(e).prev('input').css({borderColor:'#ccc'});
+		},
+		highlight:function(e){
+			$(e).css({borderColor:'#F00'});
+		}	
+	})
+</script>

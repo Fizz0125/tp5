@@ -1,0 +1,96 @@
+
+<title>产品详情页</title>
+
+<script src="__WEBPUBLIC__js/product-details.js"></script>
+<link href="__WEBPUBLIC__css/product-details.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+<!--这里是广告区-->
+<div class="banner">
+
+
+</div>
+
+
+<!--这里是内容区域-->
+<div class="content">
+    <div class="top">
+        <div class="line"></div>
+        <div class="title">
+            <span>PRODUCT CENTER</span>
+            <p>产品中心</p>
+        </div>
+        <div class="line"></div>
+    </div>
+    <div class="box">
+        <div class="con">
+            <img class="logo" src="__WEBPUBLIC__images/conduct-logo.png">
+            <ul class="left">
+            	{volist name="cate" id="clist"}
+                	<li><a {if condition="$clist.id eq $cid"}class="cur"{/if} href="/web/product/index/cid/{$clist.id}#dw">{$clist.name}</a></li>
+                {/volist}
+            </ul>
+            <div class="right">
+                <div class="img">
+                    <img class="bigimg" src="{$pic[0]['path']}">
+                    <ul class="imglist">
+                    	{volist name="pic" id="plist"}
+                        <li><img src="{$plist.path}"></li>
+                        {/volist}
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+                <div class="details">
+                  <h1>{$pro.name}</h1>
+                  <p class="p1">{$pro.brief}</p>
+                    <div class="d1">
+                        <span class="s1">价格</span>
+                        <span class="s2">￥：{$pro.shop_price}</span>
+                    </div>
+                    <h2>下午茶时间：{$pro.start_time} - {$pro.end_time}</h2>
+                    <span class="num">数量：</span>
+                    <div class="num">
+                        <span class="down">-</span>
+                            <input type="text" value="1">
+                        <span class="up">+</span>
+                    </div>
+                    <div class="clear"></div>
+                    <a class="by" href="/web/pay/index/id/{$pro.id}">立刻购买</a>
+                    <a class="cart" href="javascript:;" onclick="addCart({$pro.id})">加入购物车</a>
+                    <div class="clear"></div>
+                    <span class="last">支付方式：</span>
+                    <a class="last zfb" href="javascript:;">支付宝</a>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+            <div class="clear"></div>
+        </div>
+        <img src="__WEBPUBLIC__images/bg-bottom.png">
+    </div>
+</div>
+<script>
+	
+	function addCart(id)
+	{
+		$.ajax({
+			type:"post",
+			url:"/web/cart/insert",
+			dataType : 'json',
+			data : {id:id},
+			success : function(data)
+			{
+				if(data.error==true){
+					layer.msg($data.msg);
+					return false;
+				}
+				layer.msg(data.msg,function(){
+					window.location.href="/web/cart/index";
+				},2000);
+			}
+		});
+	}
+</script>

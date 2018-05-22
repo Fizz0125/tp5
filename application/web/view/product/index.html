@@ -1,0 +1,130 @@
+
+<title>产品中心</title>
+
+<script src="__WEBPUBLIC__js/product.js"></script>
+<link href="__WEBPUBLIC__css/product.css" type="text/css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+
+<!--这里是广告区-->
+<div class="banner">
+
+
+</div>
+
+
+<!--这里是内容区域-->
+<div class="content">
+    <div class="top">
+        <div class="line"></div>
+        <div class="title">
+            <span>PRODUCT CENTER</span>
+            <p>产品中心</p>
+        </div>
+        <div class="line"></div>
+    </div>
+    <div class="box" id="dw">
+        <div class="con">
+            <img class="logo" src="__WEBPUBLIC__images/conduct-logo.png">
+            <ul class="left">
+            	{volist name="cate" id="clist"}
+                	<li><a {if condition="$clist.id eq $cid"}class="cur"{/if} href="/web/product/index/cid/{$clist.id}#dw">{$clist.name}</a></li>
+                {/volist}
+            </ul>
+            <div class="right">
+                <ul class="list cur">
+                	{volist name="pro" id="plist"}
+	                    <li>
+		                    <a href="/web/product/details/cid/{$cid}/id/{$plist.id}" onclick="addFoot({$plist.id})">
+		                        <img src="{$plist.pic}" width="100%" height="100%">
+		                        <span class="boder"></span>
+		                        <span class="bg"></span>
+		                        <span class="h1">{$plist.name}</span>
+		                        <span class="h2">今天推出最新产品</span>
+		                        <a class="cart" href="javascript:;" onclick="addCart({$plist.id})">加入购物车</a>
+		                    </a>
+	                    </li>
+                    {/volist}
+                </ul>
+                
+                
+                <div class="bottom">
+                    <span class="cur">{$num}条/{$totalPage}页</span>
+                    <ul class="page">
+						{if condition="$curPage eq 1"}
+                        	<li><a href="javascript:;">上一页</a></li>
+                    	{else /}
+                        <li><a href="/web/product/index/cid/{$cid}/page/{$curPage-1}#dw">上一页</a></li>
+                        {/if}
+						{for start="$startPage" end="$endPage+1"}
+							{if condition="$curPage eq $i"}
+                        	<li><a style="color:#09F;" href="/web/product/index/cid/{$cid}/page/{$i}#dw">{$i}</a></li>
+							{else /}
+                        	<li><a href="/web/product/index/cid/{$cid}/page/{$i}#dw">{$i}</a></li>
+							{/if}
+						{/for}
+						{if condition="$curPage neq $totalPage"}
+                        <li><a href="javascript:;">...</a></li>
+                        <li><a href="/web/product/index/cid/{$cid}/page/{$totalPage}#dw">{$totalPage}</a></li>
+                        {/if}
+						{if condition="$curPage egt $totalPage"}
+                        	<li><a href="javascript:;">下一页</a></li>
+                        {else /}
+                        	<li><a href="/web/product/index/cid/{$cid}/page/{$curPage+1}#dw">下一页</a></li>
+                        {/if}
+                    </ul>
+                    <form action="/web/product/index/cid/{$cid}" method="post" class="form form-horizontal" id="form-member-add">
+                    <span>到第</span>
+                    <input type="text" value="{$Request.param.page}" name="page">
+                    <span>页</span>
+                    <input type="submit" value="确定">
+                    </form>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            
+            <div class="clear"></div>
+        </div>
+        <img src="__WEBPUBLIC__images/bg-bottom.png">
+    </div>
+</div>
+
+<script>
+	function addCart(id)
+	{
+		$.ajax({
+			type:"post",
+			url:"/web/cart/insert",
+			dataType : 'json',
+			data : {id:id},
+			success : function(data)
+			{
+				if(data.error==true){
+					layer.msg($data.msg);
+					return false;
+				}
+				layer.msg(data.msg,function(){
+					window.location.href="/web/cart/index";
+				},2000);
+			}
+		});
+	}
+	
+	function addFoot(id)
+	{
+		$.ajax({
+			type:"post",
+			url:"/web/footprint/insert",
+			dataType : 'json',
+			data : {id:id},
+			success : function(data)
+			{
+			}
+		});
+	}
+</script>

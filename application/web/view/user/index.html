@@ -1,0 +1,93 @@
+
+<title>会员首页</title>
+
+<link href="__WEBPUBLIC__css/common-content-2.css" type="text/css" rel="stylesheet">
+
+
+<link href="__WEBPUBLIC__css/person.css" type="text/css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div class="bigbg">
+
+<!--这里是内容区域-->
+<div class="content">
+   <div class="box">
+        <div class="con2">
+            <div class="left">
+                <p class="id">VIP：<span>{$Think.session.username['username']}</span></p>
+                <ul class="list">
+                    <li><a href="/web/user/index"  class="cur" >帐号管理</a></li>
+                    <li><a href="/web/cart/index" >购物车</a></li>
+                    <li><a href="/web/footprint/index" >我的足迹</a></li>
+                    <li><a href="/web/user/history" >购买记录</a></li>
+                    <li><a href="/web/user/password" >密码修改</a></li>
+                </ul>
+            </div>
+            <div class="right">
+                <div class="top">
+                    <p>基本资料</p>
+                </div>
+                <ul class="list">
+                    <li>
+                        <span>昵称：</span>
+                        <input type="text" name="username" placeholder="天才小熊猫" value="{$user.username}">
+                    </li>
+                    <li>
+                        <span>真实姓名：</span>
+                        <input type="text" name="realname" placeholder="猪能打败我" value="{$user.realname}">
+                    </li>
+                    <li>
+                        <span>生日：</span>
+                        <input type="text" name="birthday" placeholder="10.10" value="{$user.birthday}">
+                    </li>
+                    <li>
+                        <span>联系号码</span>
+                        <input type="text" name="phone" placeholder="联系号码" value="{$user.phone}">
+                    </li>
+                </ul>
+                <div class="adde">
+                    <span>收货地址：</span>
+                    <textarea placeholder="江西省南昌市八一广场A座203" name="address">{$user.address}</textarea>
+                    <a class="button" href="javascript:;" onclick="edit()">修改</a>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <img src="__WEBPUBLIC__images/bg-bottom.png">
+    </div>
+  
+  
+  
+</div>
+
+</div>
+<script>
+	function edit()
+	{
+		var username = $('input[name="username"]').val();
+		var phone = $('input[name="phone"]').val();
+		var birthday = $('input[name="birthday"]').val();
+		var realname = $('input[name="realname"]').val();
+		var address = $('textarea[name="address"]').val();
+		$.ajax({
+			type:"post",
+			url:"/web/user/edit",
+			dataType : 'json',
+			data : {username:username,phone:phone,birthday:birthday,realname:realname,address:address},
+			success : function(data)
+			{
+				if(data.error==true){
+					layer.msg(data.msg);
+					return false;
+				}
+				layer.msg(data.msg,function(){
+					window.location.href="/web/user/index";
+				},2000);
+			}
+		})
+	}
+</script>

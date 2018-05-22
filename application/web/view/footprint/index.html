@@ -1,0 +1,100 @@
+
+<title>我的足迹</title>
+
+
+
+
+<link href="__WEBPUBLIC__css/common-content-2.css" type="text/css" rel="stylesheet">
+
+<link href="__WEBPUBLIC__css/history.css" type="text/css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div class="bigbg">
+
+<!--这里是内容区域-->
+<div class="content">
+   <div class="box">
+        <div class="con2">
+            <div class="left">
+                <p class="id">VIP：<span>{$Think.session.username['username']}</span></p>
+                <ul class="list">
+                    <li><a href="/web/user/index" >帐号管理</a></li>
+                    <li><a href="/web/cart/index" >购物车</a></li>
+                    <li><a href="/web/footprint/index" class="cur" >我的足迹</a></li>
+                    <li><a href="/web/user/history" >购买记录</a></li>
+                    <li><a href="/web/user/password" >密码修改</a></li>
+                </ul>
+            </div>
+            <div class="right">
+                <div class="top">
+                    <ul class="title">
+                        <li class="cur">全部</li>
+                    	<a href="javascript:;" class="destory" onclick="destory()">清空购物车</a>
+                    </ul>
+                </div>
+                <ul class="list cur">
+                	{volist name="data" id="dlist" empty="数据为空"}
+                    <li class="pro{$dlist.id}">
+                        <a class="img" href="/web/product/details/cid/{$dlist.pro_category_id}/id/{$dlist.id}"><img src="{$dlist.pic}"></a>
+                        <a class="font" href="/web/product/details/cid/{$dlist.pro_category_id}/id/{$dlist.id}">{$dlist.brief}</a>
+                        <span>￥：{$dlist.shop_price}</span>
+                        <a class="delet" href="javascript:;" onclick="del({$dlist.id})">移除</a>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <img src="__WEBPUBLIC__images/bg-bottom.png">
+    </div>
+  
+  
+  
+</div>
+
+</div>
+<script>
+	
+	
+	function del(id)
+	{
+		layer.confirm('你确定移除该物品？', {
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+			$.ajax({
+				type:"post",
+				url:"/web/footprint/delete",
+				dataType : 'json',
+				data : {id:id},
+				success : function(data)
+				{
+					$('.pro'+id).remove();
+				}
+			})
+		  layer.msg('移除成功', {icon: 1});
+		}, function(){});
+	}
+	function destory()
+	{
+		layer.confirm('你确定清空购物车？', {
+		  btn: ['确定','取消'] //按钮
+		}, function(){
+			$.ajax({
+				type:"post",
+				url:"/web/cart/destory",
+				dataType : 'json',
+				data : {},
+				success : function(data)
+				{
+					$('.listbox .list li').remove();
+					$('#num').html('￥'+data.price*data.qty);
+				}
+			})
+		  layer.msg('清除成功', {icon: 1});
+		}, function(){});
+	}
+</script>
